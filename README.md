@@ -186,7 +186,25 @@ Esto instalará las siguientes dependencias:
 
 ## ▶️ 8. Ejecución del proyecto
 
-### Opción 1: Ejecución paso a paso (scripts individuales)
+### Opción 1: GitHub Actions (Automático) ⭐ RECOMENDADO
+
+El proyecto incluye un workflow de GitHub Actions que ejecuta todo el pipeline automáticamente.
+
+**Configuración inicial** (solo una vez):
+
+1. Obtén tus credenciales de Kaggle desde [https://www.kaggle.com/settings](https://www.kaggle.com/settings)
+2. En tu repositorio de GitHub: **Settings** → **Secrets and variables** → **Actions**
+3. Crea dos secrets:
+   - `KAGGLE_USERNAME`: tu usuario de Kaggle
+   - `KAGGLE_KEY`: tu API key de Kaggle
+
+**El workflow se ejecuta automáticamente**:
+- ✅ Cada vez que haces push a `main`
+- ✅ Manualmente desde la pestaña "Actions" en GitHub
+
+📖 **Guía completa**: Ver [.github/ACTIONS_SETUP.md](.github/ACTIONS_SETUP.md)
+
+### Opción 2: Ejecución paso a paso (scripts individuales)
 
 ```powershell
 # 1. Descargar y cargar datos a SQLite
@@ -196,7 +214,7 @@ python src/proyecto_integrador/load_to_sqlite.py
 python src/proyecto_integrador/export_to_csv.py
 ```
 
-### Opción 2: Ejecución desde Jupyter Notebook
+### Opción 3: Ejecución desde Jupyter Notebook
 
 ```powershell
 # Iniciar Jupyter Notebook
