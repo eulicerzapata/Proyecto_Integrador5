@@ -51,13 +51,15 @@ jobs:
       run: |
         echo "=== Archivos generados ==="
         ls -lh db/
-        ls -lh csv/
         echo ""
         echo "=== Tamaño de la base de datos ==="
         du -h db/proyecto.db
         echo ""
-        echo "=== Primeras líneas del CSV ==="
-        head -n 5 csv/export.csv
+        echo "=== Tamaño del CSV ==="
+        du -h db/export.csv
+        echo ""
+        echo "=== Primeras 5 líneas del CSV ==="
+        head -n 5 db/export.csv
     
     - name: 💾 Subir base de datos como artefacto
       uses: actions/upload-artifact@v4
@@ -70,7 +72,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: export-csv
-        path: csv/export.csv
+        path: db/export.csv
         retention-days: 30
     
     - name: ✅ Pipeline completado
