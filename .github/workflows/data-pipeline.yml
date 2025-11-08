@@ -12,9 +12,6 @@ on:
   # Permite ejecutarlo manualmente desde GitHub Actions
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   ingesta-datos:
     runs-on: ubuntu-latest
@@ -78,22 +75,9 @@ jobs:
         path: db/export.csv
         retention-days: 30
     
-    - name: 📝 Commit de archivos generados al repositorio
-      run: |
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        git add -f db/proyecto.db db/export.csv
-        git diff --staged --quiet || git commit -m "Update: Base de datos y CSV actualizados automáticamente [skip ci]"
-    
-    - name: 🚀 Push de cambios al repositorio
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
-    
     - name: ✅ Pipeline completado
       run: |
         echo "✅ Pipeline de ingesta ejecutado exitosamente"
         echo "📊 Base de datos: db/proyecto.db"
         echo "📁 CSV exportado: db/export.csv"
-        echo "🔄 Archivos guardados en el repositorio"
+        echo "� Archivos disponibles como artefactos para descargar"
