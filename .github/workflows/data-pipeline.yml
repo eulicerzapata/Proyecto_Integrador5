@@ -1,4 +1,4 @@
-name: Data Pipeline - ETL Automático
+name: Pipeline de Ingesta de Datos
 
 on:
   # Se ejecuta cuando haces push a main
@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  etl-pipeline:
+  ingesta-datos:
     runs-on: ubuntu-latest
     
     steps:
@@ -39,7 +39,7 @@ jobs:
         echo '{"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
         chmod 600 ~/.kaggle/kaggle.json
     
-    - name: 📊 Ejecutar pipeline ETL - Carga a SQLite
+    - name: 📊 Ejecutar ingesta de datos - Carga a SQLite
       run: |
         python src/proyecto_integrador/load_to_sqlite.py
     
@@ -75,8 +75,22 @@ jobs:
         path: db/export.csv
         retention-days: 30
     
+    - name: 📝 Commit de archivos generados al repositorio
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add db/proyecto.db db/export.csv
+        git diff --staged --quiet || git commit -m "Update: Base de datos y CSV actualizados automáticamente [skip ci]"
+    
+    - name: 🚀 Push de cambios al repositorio
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+    
     - name: ✅ Pipeline completado
       run: |
-        echo "✅ Pipeline ETL ejecutado exitosamente"
+        echo "✅ Pipeline de ingesta ejecutado exitosamente"
         echo "📊 Base de datos: db/proyecto.db"
-        echo "📁 CSV exportado: csv/export.csv"
+        echo "📁 CSV exportado: db/export.csv"
+        echo "🔄 Archivos guardados en el repositorio"
