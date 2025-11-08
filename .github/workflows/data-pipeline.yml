@@ -1,0 +1,81 @@
+name: Data Pipeline - ETL Automático
+
+on:
+  # Se ejecuta cuando haces push a main
+  push:
+    branches: [ main ]
+  
+  # Se ejecuta cuando haces pull request a main
+  pull_request:
+    branches: [ main ]
+  
+  # Permite ejecutarlo manualmente desde GitHub Actions
+  workflow_dispatch:
+
+jobs:
+  etl-pipeline:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout código
+      uses: actions/checkout@v4
+    
+    - name: 🐍 Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: 📦 Instalar dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+    
+    - name: 🔑 Configurar credenciales de Kaggle
+      env:
+        KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      run: |
+        mkdir -p ~/.kaggle
+        echo '{"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
+        chmod 600 ~/.kaggle/kaggle.json
+    
+    - name: 📊 Ejecutar pipeline ETL - Carga a SQLite
+      run: |
+        python src/proyecto_integrador/load_to_sqlite.py
+    
+    - name: 📤 Exportar a CSV
+      run: |
+        python src/proyecto_integrador/export_to_csv.py
+    
+    - name: 📋 Verificar archivos generados
+      run: |
+        echo "=== Archivos generados ==="
+        ls -lh db/
+        ls -lh csv/
+        echo ""
+        echo "=== Tamaño de la base de datos ==="
+        du -h db/proyecto.db
+        echo ""
+        echo "=== Primeras líneas del CSV ==="
+        head -n 5 csv/export.csv
+    
+    - name: 💾 Subir base de datos como artefacto
+      uses: actions/upload-artifact@v4
+      with:
+        name: database-sqlite
+        path: db/proyecto.db
+        retention-days: 30
+    
+    - name: 💾 Subir CSV como artefacto
+      uses: actions/upload-artifact@v4
+      with:
+        name: export-csv
+        path: csv/export.csv
+        retention-days: 30
+    
+    - name: ✅ Pipeline completado
+      run: |
+        echo "✅ Pipeline ETL ejecutado exitosamente"
+        echo "📊 Base de datos: db/proyecto.db"
+        echo "📁 CSV exportado: csv/export.csv"
