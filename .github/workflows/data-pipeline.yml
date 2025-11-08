@@ -12,6 +12,9 @@ on:
   # Permite ejecutarlo manualmente desde GitHub Actions
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   ingesta-datos:
     runs-on: ubuntu-latest
