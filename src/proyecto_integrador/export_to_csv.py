@@ -3,7 +3,7 @@ Script de Exportación desde SQLite a CSV
 =========================================
 
 Este script exporta los datos desde la base de datos SQLite (db/proyecto.db)
-a un archivo CSV (db/export.csv).
+a un archivo CSV (csv/export.csv).
 
 """
 
@@ -58,7 +58,12 @@ def main():
     # Configuración de rutas
     project_root = Path(__file__).parent.parent.parent
     db_path = project_root / "db" / "proyecto.db"
-    output_csv = project_root / "db" / "export.csv"
+    csv_dir = project_root / "csv"
+    
+    # Crear directorio csv si no existe
+    csv_dir.mkdir(parents=True, exist_ok=True)
+    
+    output_csv = csv_dir / "export.csv"
     
     try:
         # Exportar datos
