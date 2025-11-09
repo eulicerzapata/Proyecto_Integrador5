@@ -1,45 +1,19 @@
 # Proyecto Integrado 5 – Análisis de Transacciones con Tarjetas de Crédito 💳
 
-## � Resumen (Abstract)
-
-El presente proyecto surge de la necesidad de comprender cómo se comportan los usuarios de tarjetas de crédito a partir de la información disponible en registros reales de transacciones. Este tipo de análisis es útil para comercios y analistas que requieren identificar zonas de mayor actividad, identificación de género, y características del uso cotidiano de los servicios financieros. 
-
-Para este estudio se utilizó el **Credit Card Transactions Dataset**, obtenido de la plataforma pública Kaggle y descargado en noviembre de 2025. El conjunto de datos incluye información sobre el monto de cada transacción, la fecha en que fue realizada, la categoría del comercio, el nombre del establecimiento, la ubicación geográfica, género y otros datos asociados a cada operación, suficientes para realizar un análisis descriptivo del comportamiento transaccional.
-
-El propósito del proyecto es analizar estas transacciones para identificar los lugares donde compran los usuarios, los tipos de comercios que frecuentan, los montos que suelen gastar y el género que mayor gasta. El estudio del dataset se realizará mediante un análisis exploratorio, empleando técnicas descriptivas y visualizaciones que permiten identificar patrones y posibles anomalías presentes en el conjunto de datos.
-
-Los resultados permitirán una mejor comprensión del uso de tarjetas de crédito en diferentes contextos de consumo, ofreciendo información relevante para la toma de decisiones y el entendimiento del comportamiento financiero de los usuarios.
-
-**Palabras clave:** transacciones, Kaggle, tarjetas de crédito, análisis exploratorio, comercios, género, ubicación geográfica.
-
 ---
 
 ## 🎯 Objetivos
 
 ### Objetivo General
 Analizar las transacciones bancarias en función del género y la ubicación geográfica de los titulares.
-
-### Objetivos Específicos
-1. Seleccionar y comprender el dataset utilizado, incluyendo la fuente de datos de Kaggle.
-2. Identificar y describir las variables relevantes del conjunto de datos.
-3. Diseñar y construir una base de datos en SQLite que permita almacenar y consultar las transacciones.
-4. Realizar el flujo del dataset → SQLite → CSV mediante procesos de carga y exportación.
-5. Documentar el proceso y elaborar el documento en formato APA.
-
 ---
 
 ## 📘 1. Definición del problema / Caso de uso
-
-El uso de tarjetas de crédito genera diariamente un gran volumen de transacciones que contienen información clave sobre el comportamiento de compra de los usuarios. Sin embargo, muchas instituciones, comercios y analistas carecen de una comprensión clara sobre cómo, dónde y en qué categorías de comercio se realizan estas transacciones, lo que dificulta realizar un análisis de género y ubicación geográfica, así como identificar zonas de mayor actividad comercial. Esta falta de conocimiento limita la capacidad de tomar decisiones informadas relacionadas con estrategias comerciales, segmentación de clientes y tendencias relevantes en el consumo.
-
-El presente proyecto aborda esta necesidad mediante el análisis del **Credit Card Transactions Dataset**, un conjunto de datos público obtenido de la plataforma Kaggle y descargado en noviembre de 2025. Este dataset contiene información sobre montos transaccionados, fechas de las operaciones, categorías de comercio, nombres de establecimientos, datos de ubicación geográfica y género asociados a cada registro. Estos atributos permiten realizar un análisis descriptivo del comportamiento transaccional sin necesidad de técnicas predictivas o modelos avanzados.
 
 El caso de uso se centra en examinar:
 -  Cómo se distribuyen las transacciones según ubicación y tipo de comercio
 -  Diferencias de comportamiento por género
 -  Zonas geográficas de mayor actividad comercial
-
-Con ello se busca generar una comprensión clara y fundamentada del consumo mediante tarjetas de crédito, útil para diferentes actores interesados en el análisis de datos financieros.
 
 ---
 
