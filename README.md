@@ -35,11 +35,9 @@ El uso de tarjetas de crédito genera diariamente un gran volumen de transaccion
 El presente proyecto aborda esta necesidad mediante el análisis del **Credit Card Transactions Dataset**, un conjunto de datos público obtenido de la plataforma Kaggle y descargado en noviembre de 2025. Este dataset contiene información sobre montos transaccionados, fechas de las operaciones, categorías de comercio, nombres de establecimientos, datos de ubicación geográfica y género asociados a cada registro. Estos atributos permiten realizar un análisis descriptivo del comportamiento transaccional sin necesidad de técnicas predictivas o modelos avanzados.
 
 El caso de uso se centra en examinar:
-- 🗺️ Cómo se distribuyen las transacciones según ubicación y tipo de comercio
-- 💰 Qué patrones se observan en los montos de gasto
-- 👥 Diferencias de comportamiento por género
-- 📍 Zonas geográficas de mayor actividad comercial
-- ⚠️ Qué comportamientos podrían considerarse inusuales dentro del conjunto de datos
+-  Cómo se distribuyen las transacciones según ubicación y tipo de comercio
+-  Diferencias de comportamiento por género
+-  Zonas geográficas de mayor actividad comercial
 
 Con ello se busca generar una comprensión clara y fundamentada del consumo mediante tarjetas de crédito, útil para diferentes actores interesados en el análisis de datos financieros.
 
@@ -80,14 +78,6 @@ El dataset contiene información detallada sobre transacciones de tarjetas de cr
 ---
 
 ## 🧠 4. Justificación del análisis
-
-El análisis de transacciones con tarjetas de crédito es fundamental para:
-
-- **Análisis de comportamiento por género:** Identificar diferencias en patrones de gasto entre grupos demográficos.
-- **Análisis geográfico:** Identificar zonas de mayor actividad comercial y tendencias regionales.
-- **Segmentación de comercios:** Entender qué categorías de comercio son más frecuentadas.
-- **Identificación de patrones anómalos:** Detectar comportamientos inusuales en transacciones.
-- **Optimización de estrategias comerciales:** Diseñar productos y servicios adaptados a las necesidades de los clientes según ubicación y perfil.
 
 El mercado de transacciones financieras genera grandes volúmenes de datos que requieren análisis descriptivo para extraer información valiosa y fundamentar decisiones basadas en evidencia.
 
