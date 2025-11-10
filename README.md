@@ -2,9 +2,11 @@
 
 ---
 ## 🔗 Links
+
 Diagrama de Gantt: https://docs.google.com/spreadsheets/d/1I1Phu9ODemJZHmGOwFeAwHl1w4TL-Qs5J2ONIuQouhg/edit?usp=sharing
 
 Documentación: https://docs.google.com/document/d/1dQ46rt1UL1tuB6v6KXs-eRTLkAm-UciMZAHUypAvRkg/edit?usp=sharing
+
 ---
 
 
