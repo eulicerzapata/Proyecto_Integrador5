@@ -67,7 +67,7 @@ El mercado de transacciones financieras genera grandes volúmenes de datos que r
 
 ## 🧱 5. Flujo de datos implementado
 
-El proyecto cumple con el flujo **Dataset → SQLite → CSV** exigido:
+El proyecto cumple con el flujo **Dataset → Limpieza → SQLite → CSV** exigido:
 
 ```
 ┌─────────────────┐
@@ -85,8 +85,19 @@ El proyecto cumple con el flujo **Dataset → SQLite → CSV** exigido:
 └────────┬────────────┘
          │
          ▼
+┌─────────────────────────────┐
+│  2. LIMPIEZA Y ENRIQUECIMIENTO   
+│  (limpiar_enriquecer.py)    │
+│  - Eliminar duplicados      │
+│  - Manejar nulos            │
+│  - Normalizar columnas      │
+│  - Enriquecer con fechas    │
+│  - Guardar CSV enriquecido  │
+└────────┬────────────────────┘
+         │
+         ▼
 ┌─────────────────────┐
-│  2. CARGA A SQLite  │
+│  3. CARGA A SQLite  │
 │  (load_to_sqlite.py)│
 │  - Crear DB         │
 │  - Insertar datos   │
@@ -95,7 +106,7 @@ El proyecto cumple con el flujo **Dataset → SQLite → CSV** exigido:
          │
          ▼
 ┌─────────────────────┐
-│  3. EXPORTACIÓN CSV │
+│  4. EXPORTACIÓN CSV │
 │  (export_to_csv.py) │
 │  - Consulta SQL     │
 │  - Generación CSV   │
@@ -103,7 +114,7 @@ El proyecto cumple con el flujo **Dataset → SQLite → CSV** exigido:
          │
          ▼
 ┌─────────────────────┐
-│  4. ANÁLISIS        │
+│  5. ANÁLISIS        │
 │  (Jupyter Notebook) │
 │  - Exploración      │
 │  - Visualización    │
@@ -123,20 +134,26 @@ piv_2025_2_2/
 │
 ├── src/
 │   └── proyecto_integrador/
-│       ├── ingestar.py         # Clase para descarga y procesamiento desde Kaggle
-│       ├── load_to_sqlite.py   # Script de carga a base de datos SQLite
-│       └── export_to_csv.py    # Script de exportación desde SQLite a CSV
+│       ├── __init__.py           # Exportaciones del módulo
+│       ├── ingestar.py           # Clase para descarga y procesamiento desde Kaggle
+│       ├── limpiar_datos.py      # Limpieza y enriquecimiento de datos
+│       ├── load_to_sqlite.py     # Script de carga a base de datos SQLite
+│       └── export_to_csv.py      # Script de exportación desde SQLite a CSV
 │
 ├── notebooks/
-│   └── proyecto_integrador.ipynb  # Notebook con análisis exploratorio
+│   ├── proyecto_integrador.ipynb        # Notebook con análisis exploratorio
+│
+├── docs/
+│   └── imagenes/                      # Imágenes de gráficos de los análisis exploratorios
 │
 ├── db/
-│   └── proyecto.db             # Base de datos SQLite (generada)
+│   └── proyecto.db              # Base de datos SQLite (generada)
 │
-├── csv/
-│   └── export.csv              # Archivo CSV exportado (generado)
+├── data/
+│   └── dataset_enriquecido.csv  # Dataset limpio y enriquecido (generado)
 │
-└── data/                        # Datos descargados de Kaggle (generado)
+└── csv/
+    └── export.csv               # Archivo CSV exportado (generado)
 ```
 
 ---
@@ -210,7 +227,12 @@ El proyecto incluye un workflow de GitHub Actions que ejecuta todo el pipeline a
 ### Opción 2: Ejecución paso a paso (scripts individuales)
 
 ```powershell
-# 1. Descargar y cargar datos a SQLite
+# 1. Descargar, limpiar datos 
+python src/proyecto_integrador/limpiar_datos.py
+
+# O ejecutar paso a paso:
+
+# 1a.  descargar y cargar datos a SQLite 
 python src/proyecto_integrador/load_to_sqlite.py
 
 # 2. Exportar desde SQLite a CSV
@@ -218,6 +240,25 @@ python src/proyecto_integrador/export_to_csv.py
 ```
 
 ### Opción 3: Ejecución desde Jupyter Notebook
+
+#### Notebook de Limpieza y Enriquecimiento
+
+```powershell
+# Abrir notebook de limpieza
+jupyter notebook notebooks/limpieza_enriquecimiento.ipynb
+```
+
+Este notebook incluye:
+- ✅ Descarga automática del dataset
+- ✅ Análisis antes y después de la limpieza
+- ✅ Eliminación de duplicados
+- ✅ Manejo de valores nulos
+- ✅ Normalización de columnas
+- ✅ Enriquecimiento con columnas temporales (año, mes, día, etc.)
+- ✅ Carga a SQLite
+- ✅ Estadísticas descriptivas
+
+#### Notebook de Análisis Exploratorio
 
 ```powershell
 # Iniciar Jupyter Notebook
@@ -239,16 +280,8 @@ Al finalizar la ejecución, tendrás:
 1. **Base de datos SQLite** (`db/proyecto.db`) con la tabla `transacciones`
 2. **Archivo CSV** (`csv/export.csv`) con los datos exportados
 3. **Notebook con análisis exploratorio** que incluye:
-   - Estadísticas descriptivas generales
-   - Análisis de transacciones por género
-   - Análisis geográfico (ciudad, estado, coordenadas)
-   - Distribución de transacciones por categoría de comercio
-   - Identificación de establecimientos más frecuentados
-   - Análisis de montos de gasto por perfil demográfico
-   - Patrones temporales de transacciones
-   - Detección de valores nulos y datos inconsistentes
-   - Identificación de posibles anomalías en el conjunto de datos
-
+4. **Carpeta de Gráficos** (`docs/graficos/`) con visualizaciones clave
+ 
 ---
 
 ## 🔍 10. Validaciones y comprobaciones

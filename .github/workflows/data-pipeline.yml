@@ -65,6 +65,21 @@ jobs:
         echo "=== Primeras 5 líneas del CSV ==="
         head -n 5 csv/export.csv
     
+    - name: 🧹 Ejecutar Limpieza de Datos
+      run: |
+        python src/proyecto_integrador/limpiar_datos.py
+    
+    - name: 📈 Ejecutar Análisis Gráfico (Notebook)
+      run: |
+        pip install jupyter nbconvert seaborn matplotlib
+        jupyter nbconvert --to notebook --execute notebooks/analisis_grafico.ipynb --output notebooks/analisis_grafico_ejecutado.ipynb
+      continue-on-error: true # Para que no falle si hay warnings en el notebook
+
+    - name: 📋 Verificar Gráficos Generados
+      run: |
+        echo "=== Gráficos Generados ==="
+        ls -lh docs/graficos/
+    
     - name: 💾 Subir base de datos como artefacto
       uses: actions/upload-artifact@v4
       with:
@@ -78,10 +93,26 @@ jobs:
         name: export-csv
         path: csv/export.csv
         retention-days: 30
+
+    - name: 💾 Subir Dataset Enriquecido como artefacto
+      uses: actions/upload-artifact@v4
+      with:
+        name: dataset-enriquecido
+        path: data/dataset_enriquecido.csv
+        retention-days: 30
+
+    - name: 🖼️ Subir Gráficos como artefacto
+      uses: actions/upload-artifact@v4
+      with:
+        name: graficos-analisis
+        path: docs/graficos/
+        retention-days: 30
     
     - name: ✅ Pipeline completado
       run: |
-        echo "✅ Pipeline de ingesta ejecutado exitosamente"
+        echo "✅ Pipeline de ingesta y análisis ejecutado exitosamente"
         echo "📊 Base de datos: db/proyecto.db"
         echo "📁 CSV exportado: csv/export.csv"
+        echo "🧹 Dataset limpio: data/dataset_enriquecido.csv"
+        echo "🖼️ Gráficos generados: docs/graficos/"
         echo "💾 Archivos disponibles como artefactos para descargar"
