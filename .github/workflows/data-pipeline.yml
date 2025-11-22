@@ -71,9 +71,9 @@ jobs:
     
     - name: 📈 Ejecutar Análisis Gráfico (Notebook)
       run: |
-        pip install jupyter nbconvert seaborn matplotlib
-        jupyter nbconvert --to notebook --execute notebooks/analisis_grafico.ipynb --output notebooks/analisis_grafico_ejecutado.ipynb
-      continue-on-error: true # Para que no falle si hay warnings en el notebook
+        pip install papermill ipykernel seaborn matplotlib
+        papermill notebooks/analisis_grafico.ipynb notebooks/analisis_grafico_ejecutado.ipynb
+      continue-on-error: true
 
     - name: 📋 Verificar Gráficos Generados
       run: |
