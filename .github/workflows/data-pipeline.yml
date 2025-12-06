@@ -108,6 +108,12 @@ jobs:
         path: docs/graficos/
         retention-days: 30
     
+    - name: 🖥️ Verificar Ejecución del Dashboard
+      run: |
+        # Ejecutar streamlit en modo headless y verificar si inicia (timeout 10s es esperado si funciona)
+        timeout 10s streamlit run dashboard/app.py --server.headless true || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
+        echo "Dashboard iniciado exitosamente"
+
     - name: ✅ Pipeline completado
       run: |
         echo "✅ Pipeline de ingesta y análisis ejecutado exitosamente"

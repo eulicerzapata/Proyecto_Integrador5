@@ -10,13 +10,15 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     install_requires=[
-        "pandas",
+        "pandas>=2.0.0",
         "openpyxl",
         "requests",
         "beautifulsoup4",
         "matplotlib",
         "kagglehub[pandas-datasets]>=0.3.8",
         "seaborn",
-        "pyarrow"
+        "pyarrow",
+        "streamlit>=1.28.0",
+        "plotly>=5.18.0"
     ],
 )
