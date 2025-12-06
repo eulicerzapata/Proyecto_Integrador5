@@ -640,8 +640,21 @@ def grafico_proporcion_gasto_estados(df_filtrado, ordenar_por='F', top_n=10):
     # Calcular porcentaje (proporción)
     pivot_pct = pivot_sum.div(pivot_sum.sum(axis=1), axis=0)
     
-    # Ordenar por el MONTO en dólares del género seleccionado (no porcentaje)
-    if ordenar_por in pivot_sum.columns:
+    # Ordenar por el MONTO en dólares
+    if ordenar_por == 'total':
+        # Ordenar por gasto total (suma de F y M)
+        pivot_sum['total'] = pivot_sum.sum(axis=1)
+        pivot_sum_sorted = pivot_sum.sort_values('total', ascending=False).head(top_n)
+        pivot_sum_sorted = pivot_sum_sorted.drop(columns='total')
+        
+        # Invertir para que el mayor quede arriba en el gráfico horizontal
+        pivot_sum_sorted = pivot_sum_sorted.iloc[::-1]
+        
+        # Alinear la tabla de porcentajes
+        pivot_pct = pivot_pct.reindex(pivot_sum_sorted.index)
+        pivot_sum = pivot_sum_sorted
+        
+    elif ordenar_por in pivot_sum.columns:
         # Ordenar de mayor a menor MONTO del género seleccionado
         pivot_sum_sorted = pivot_sum.sort_values(ordenar_por, ascending=False).head(top_n)
         # Invertir para que el mayor quede arriba en el gráfico horizontal
@@ -699,10 +712,12 @@ def grafico_proporcion_gasto_estados(df_filtrado, ordenar_por='F', top_n=10):
     # Calcular altura dinámica basada en cantidad de estados - más grande
     altura = max(550, top_n * 55)
     
+    titulo_orden = "Total" if ordenar_por == 'total' else GENDER_LABELS.get(ordenar_por, ordenar_por)
+    
     fig.update_layout(
         template='plotly_white',
         title=dict(
-            text=f'📊 Top {top_n} Estados con Mayor Gasto {GENDER_LABELS.get(ordenar_por, ordenar_por)}',
+            text=f'📊 Top {top_n} Estados con Mayor Gasto ({titulo_orden})',
             font=dict(size=20)
         ),
         barmode='stack',
@@ -1053,8 +1068,8 @@ def main():
     with col_orden:
         ordenar_por = st.radio(
             "Ordenar por gasto:",
-            options=['F', 'M'],
-            format_func=lambda x: GENDER_LABELS.get(x, x),
+            options=['total', 'F', 'M'],
+            format_func=lambda x: "Total" if x == 'total' else GENDER_LABELS.get(x, x),
             horizontal=True,
             key='orden_estados'
         )
