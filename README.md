@@ -305,6 +305,19 @@ El proyecto cuenta con un dashboard interactivo desplegado en Streamlit Cloud qu
 3.  **Usa los filtros** en la barra lateral para segmentar por año, estado o género.
 4.  **Interactúa con los gráficos**: puedes hacer zoom, descargar imágenes y ver detalles al pasar el mouse.
 
+### 💻 Ejecución Local del Dashboard
+
+Si deseas ejecutar el tablero en tu propia máquina:
+
+1. Asegúrate de tener las dependencias instaladas (ver sección 7).
+2. Ejecuta el siguiente comando en la terminal:
+
+```bash
+streamlit run dashboard/app.py
+```
+
+3. El dashboard se abrirá automáticamente en tu navegador (usualmente en `http://localhost:8501`).
+
 ---
 
 ## 👥 12. Autores
