@@ -149,7 +149,12 @@ st.markdown("""
 @st.cache_data
 def cargar_datos():
     """Carga el dataset enriquecido con caché para mejor rendimiento."""
+    # Priorizar Parquet (más rápido y ligero)
     rutas_posibles = [
+        Path(__file__).parent.parent / 'data' / 'dataset_enriquecido.parquet',
+        Path('data/dataset_enriquecido.parquet'),
+        Path('../data/dataset_enriquecido.parquet'),
+        # Fallback a CSV si no existe Parquet
         Path(__file__).parent.parent / 'data' / 'dataset_enriquecido.csv',
         Path('data/dataset_enriquecido.csv'),
         Path('../data/dataset_enriquecido.csv'),
@@ -157,18 +162,31 @@ def cargar_datos():
     
     for ruta in rutas_posibles:
         if ruta.exists():
-            df = pd.read_csv(ruta, low_memory=False)
-            # Convertir fecha a datetime
-            df['trans_date_trans_time'] = pd.to_datetime(df['trans_date_trans_time'])
-            # Crear columnas adicionales para análisis temporal
-            df['dia_semana'] = df['trans_date_trans_time'].dt.day_name()
-            df['dia_semana_num'] = df['trans_date_trans_time'].dt.dayofweek
-            df['hora_num'] = df['trans_date_trans_time'].dt.hour
-            df['mes_nombre'] = df['mes'].map(MESES)
-            df['periodo'] = df['trans_date_trans_time'].dt.to_period('M').astype(str)
+            if ruta.suffix == '.parquet':
+                df = pd.read_parquet(ruta)
+            else:
+                df = pd.read_csv(ruta, low_memory=False)
+                # Convertir fecha a datetime (solo necesario para CSV, parquet guarda tipos)
+                df['trans_date_trans_time'] = pd.to_datetime(df['trans_date_trans_time'])
+            
+            # Asegurar tipos de fecha si no vinieron correctos
+            if not pd.api.types.is_datetime64_any_dtype(df['trans_date_trans_time']):
+                 df['trans_date_trans_time'] = pd.to_datetime(df['trans_date_trans_time'])
+
+            # Crear columnas adicionales para análisis temporal (si no existen)
+            if 'dia_semana' not in df.columns:
+                df['dia_semana'] = df['trans_date_trans_time'].dt.day_name()
+            if 'dia_semana_num' not in df.columns:
+                df['dia_semana_num'] = df['trans_date_trans_time'].dt.dayofweek
+            if 'hora_num' not in df.columns:
+                df['hora_num'] = df['trans_date_trans_time'].dt.hour
+            if 'mes_nombre' not in df.columns:
+                df['mes_nombre'] = df['mes'].map(MESES)
+            if 'periodo' not in df.columns:
+                df['periodo'] = df['trans_date_trans_time'].dt.to_period('M').astype(str)
             return df
     
-    st.error("No se encontró el archivo dataset_enriquecido.csv")
+    st.error("No se encontró el archivo dataset_enriquecido (parquet o csv)")
     return None
 
 

@@ -209,6 +209,7 @@ __marimo__/
 # Proyecto Integrado - Archivos de datos
 # Ignorar datasets grandes descargados de Kaggle
 data/*.csv
+!data/dataset_enriquecido.parquet
 data/*.xlsx
 data/*.zip
 data/*.json

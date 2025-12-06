@@ -670,14 +670,21 @@ class LimpiadorDatos:
     
     def guardar_dataset_limpio(self, ruta: str) -> None:
         """
-        Guarda el dataset limpio en un archivo CSV.
+        Guarda el dataset limpio en un archivo CSV y Parquet.
         
         Args:
-            ruta: Ruta donde guardar el archivo CSV
+            ruta: Ruta base donde guardar el archivo (se usará para CSV)
         """
+        # Guardar CSV
         Path(ruta).parent.mkdir(parents=True, exist_ok=True)
         self.df_limpio.to_csv(ruta, index=False, encoding='utf-8')
-        print(f"\nDataset limpio guardado en: {ruta}")
+        print(f"\nDataset limpio guardado en CSV: {ruta}")
+        
+        # Guardar Parquet (mismo nombre base, extensión .parquet)
+        ruta_parquet = str(Path(ruta).with_suffix('.parquet'))
+        self.df_limpio.to_parquet(ruta_parquet, index=False)
+        print(f"Dataset limpio guardado en Parquet: {ruta_parquet}")
+        
         print(f"   - {len(self.df_limpio):,} filas x {len(self.df_limpio.columns)} columnas")
 
 
