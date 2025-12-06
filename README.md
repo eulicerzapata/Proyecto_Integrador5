@@ -129,31 +129,28 @@ El proyecto cumple con el flujo **Dataset → Limpieza → SQLite → CSV** exig
 ```
 piv_2025_2_2/
 │
-├── README.md                    # Este archivo
-├── setup.py                     # Configuración del paquete Python
+├── README.md                    # Documentación del proyecto
+├── setup.py                     # Configuración del paquete
+├── requirements.txt             # Dependencias del proyecto
+│
+├── dashboard/
+│   └── app.py                   # Código fuente del dashboard (Streamlit)
 │
 ├── src/
 │   └── proyecto_integrador/
-│       ├── __init__.py           # Exportaciones del módulo
-│       ├── ingestar.py           # Clase para descarga y procesamiento desde Kaggle
-│       ├── limpiar_datos.py      # Limpieza y enriquecimiento de datos
-│       ├── load_to_sqlite.py     # Script de carga a base de datos SQLite
-│       └── export_to_csv.py      # Script de exportación desde SQLite a CSV
-│
-├── notebooks/
-│   ├── proyecto_integrador.ipynb        # Notebook con análisis exploratorio
-│
-├── docs/
-│   └── imagenes/                      # Imágenes de gráficos de los análisis exploratorios
-│
-├── db/
-│   └── proyecto.db              # Base de datos SQLite (generada)
+│       ├── limpiar_datos.py      # Limpieza y generación de Parquet
+│       ├── ingestar.py           # Descarga de datos
+│       ├── load_to_sqlite.py     # Carga a base de datos
+│       └── export_to_csv.py      # Exportación
 │
 ├── data/
-│   └── dataset_enriquecido.csv  # Dataset limpio y enriquecido (generado)
+│   └── dataset_enriquecido.parquet  # Dataset optimizado para el dashboard
 │
-└── csv/
-    └── export.csv               # Archivo CSV exportado (generado)
+├── db/
+│   └── proyecto.db              # Base de datos SQLite
+│
+├── notebooks/                   # Notebooks de análisis y pruebas
+└── docs/                        # Documentación y gráficos generados
 ```
 
 ---
@@ -296,16 +293,29 @@ El proyecto incluye validaciones automáticas en el notebook:
 
 ---
 
-## 👥 11. Autores
+## 📊 11. Dashboard Interactivo
+
+El proyecto cuenta con un dashboard interactivo desplegado en Streamlit Cloud que permite explorar los datos de manera visual.
+
+**🔗 Link del Dashboard:** [https://proyectointegrador5git-p93mwqqeqjdqwvujfgevf3.streamlit.app/](https://proyectointegrador5git-p93mwqqeqjdqwvujfgevf3.streamlit.app/)
+
+### Instrucciones para usar el dashboard:
+1.  **Ingresa al link** proporcionado arriba.
+2.  **Navega por las pestañas** para ver diferentes análisis (Temporal, Género, Ubicación).
+3.  **Usa los filtros** en la barra lateral para segmentar por año, estado o género.
+4.  **Interactúa con los gráficos**: puedes hacer zoom, descargar imágenes y ver detalles al pasar el mouse.
+
+---
+
+## 👥 12. Autores
 
 - **Eulicer Zapata Orrego** - [eulicer.zapata@iudigital.edu.co](mailto:eulicer.zapata@iudigital.edu.co)
 - **Dawin Salazar**- [dawin.salazar@iudigital.edu.co](mailto:dawin.salazar@iudigital.edu.co)
 
 ---
 
-## 📄 12. Licencia
+## 📄 13. Licencia
 
 Este proyecto es de uso académico para el **Proyecto Integrado 5** de la Institución Universitaria Digital.
 
 ---
-
