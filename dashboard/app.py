@@ -717,7 +717,7 @@ def grafico_proporcion_gasto_estados(df_filtrado, ordenar_por='F', top_n=10):
     fig.update_layout(
         template='plotly_white',
         title=dict(
-            text=f'📊 Top {top_n} Estados con Mayor Gasto ({titulo_orden})',
+            text=f'📊 Top {top_n} Estados: Proporción de Gasto por Género (Orden: {titulo_orden})',
             font=dict(size=20)
         ),
         barmode='stack',
@@ -741,6 +741,117 @@ def grafico_proporcion_gasto_estados(df_filtrado, ordenar_por='F', top_n=10):
     )
     
     return fig
+
+
+def grafico_total_gasto_estados(df_filtrado, top_n=10, orden_ascendente=False):
+    """Gráfico de barras: Total de gasto por estado (absoluto)."""
+    
+    # Agrupar por estado y sumar monto
+    df_estados = df_filtrado.groupby('state_name')['amt'].sum().reset_index()
+    
+    # Ordenar por monto para tomar el top N correcto
+    if orden_ascendente:
+        # Si es ascendente (Menor a mayor), tomamos los N con MENOS gasto
+        df_estados = df_estados.sort_values('amt', ascending=True).head(top_n)
+        # Para visualizar menor arriba (Plotly dibuja desde abajo), ordenamos descendente
+        # Index 0 (abajo) = Mayor de este grupo. Index N (arriba) = Menor.
+        df_estados = df_estados.sort_values('amt', ascending=False)
+        titulo_orden = "Menor Gasto"
+    else:
+        # Si es descendente (Mayor a menor), tomamos los N con MÁS gasto
+        df_estados = df_estados.sort_values('amt', ascending=False).head(top_n)
+        # Para visualizar mayor arriba, ordenamos ascendente
+        # Index 0 (abajo) = Menor de este grupo. Index N (arriba) = Mayor.
+        df_estados = df_estados.sort_values('amt', ascending=True)
+        titulo_orden = "Mayor Gasto"
+    
+    fig = px.bar(
+        df_estados,
+        x='amt',
+        y='state_name',
+        orientation='h',
+        text='amt',
+        title=f'💰 Top {top_n} Estados: Gasto Total ({titulo_orden})',
+        labels={'amt': 'Gasto Total ($)', 'state_name': 'Estado'}
+    )
+    
+    fig.update_traces(
+        marker_color='#34495e',  # Azul oscuro/Gris para neutralidad
+        texttemplate='$%{x:,.0f}',
+        textposition='outside'
+    )
+    
+    altura = max(400, top_n * 40)
+    
+    fig.update_layout(
+        template='plotly_white',
+        height=altura,
+        xaxis_tickformat='$,.0f',
+        yaxis=dict(title=''),
+        margin=dict(l=150)
+    )
+    
+    return fig
+
+# ... (mapa_concentracion_transacciones and crear_kpis remain unchanged) ...
+
+# ... inside main() ...
+
+    # --------------------------------------------------------------------------
+    # SUBSECCIÓN 3.1: GASTO TOTAL (NUEVO)
+    # --------------------------------------------------------------------------
+    st.markdown("### 💰 Gasto Total por Estado")
+    
+    # Selectores específicos para el gráfico de totales
+    col_orden_total, col_cant_total, col_espacio_2 = st.columns([1, 1, 2])
+    
+    with col_orden_total:
+        orden_total_sel = st.radio(
+            "Orden del gráfico:",
+            options=['Mayor a menor', 'Menor a mayor'],
+            horizontal=True,
+            key='orden_total_estados'
+        )
+        
+    with col_cant_total:
+        top_n_total = st.selectbox(
+            "Mostrar estados (Total):",
+            options=[10, 20, 30, 40, 50],
+            index=0,
+            key='top_n_total_estados'
+        )
+    
+    es_ascendente = orden_total_sel == 'Menor a mayor'
+    st.plotly_chart(grafico_total_gasto_estados(df_filtrado, top_n_total, es_ascendente), use_container_width=True)
+    
+    st.markdown("---")
+
+    # --------------------------------------------------------------------------
+    # SUBSECCIÓN 3.2: PROPORCIÓN POR GÉNERO
+    # --------------------------------------------------------------------------
+    st.markdown("### 📊 Proporción de Gasto por Género")
+    
+    # Selectores específicos para el gráfico de proporción
+    col_orden, col_cant_prop, col_espacio_3 = st.columns([1, 1, 2])
+    
+    with col_orden:
+        ordenar_por = st.radio(
+            "Ordenar proporción por:",
+            options=['total', 'F', 'M'],
+            format_func=lambda x: "Total" if x == 'total' else GENDER_LABELS.get(x, x),
+            horizontal=True,
+            key='orden_estados'
+        )
+        
+    with col_cant_prop:
+        top_n_prop = st.selectbox(
+            "Mostrar estados (Prop.):",
+            options=[10, 20, 30, 40, 50],
+            index=0,
+            key='top_n_prop_estados'
+        )
+        
+    st.plotly_chart(grafico_proporcion_gasto_estados(df_filtrado, ordenar_por, top_n_prop), use_container_width=True)
 
 
 def mapa_concentracion_transacciones(df_filtrado, max_cities=300):
@@ -1063,25 +1174,65 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    # Selector de ordenamiento y cantidad
-    col_orden, col_cantidad, col_espacio = st.columns([1, 1, 3])
+    # (Selector de cantidad común eliminado)
+    
+    st.markdown("---")
+    
+    # --------------------------------------------------------------------------
+    # SUBSECCIÓN 3.1: GASTO TOTAL (NUEVO)
+    # --------------------------------------------------------------------------
+    st.markdown("### 💰 Gasto Total por Estado")
+    
+    # Selectores específicos para el gráfico de totales
+    col_orden_total, col_cant_total, col_espacio_2 = st.columns([1, 1, 2])
+    
+    with col_orden_total:
+        orden_total_sel = st.radio(
+            "Orden del gráfico:",
+            options=['Mayor a menor', 'Menor a mayor'],
+            horizontal=True,
+            key='orden_total_estados'
+        )
+        
+    with col_cant_total:
+        top_n_total = st.selectbox(
+            "Mostrar estados (Total):",
+            options=[10, 20, 30, 40, 50],
+            index=0,
+            key='top_n_total_estados'
+        )
+    
+    es_ascendente = orden_total_sel == 'Menor a mayor'
+    st.plotly_chart(grafico_total_gasto_estados(df_filtrado, top_n_total, es_ascendente), use_container_width=True)
+    
+    st.markdown("---")
+
+    # --------------------------------------------------------------------------
+    # SUBSECCIÓN 3.2: PROPORCIÓN POR GÉNERO
+    # --------------------------------------------------------------------------
+    st.markdown("### 📊 Proporción de Gasto por Género")
+    
+    # Selectores específicos para el gráfico de proporción
+    col_orden, col_cant_prop, col_espacio_3 = st.columns([1, 1, 2])
+    
     with col_orden:
         ordenar_por = st.radio(
-            "Ordenar por gasto:",
+            "Ordenar proporción por:",
             options=['total', 'F', 'M'],
             format_func=lambda x: "Total" if x == 'total' else GENDER_LABELS.get(x, x),
             horizontal=True,
             key='orden_estados'
         )
-    with col_cantidad:
-        top_n = st.selectbox(
-            "Mostrar estados:",
+        
+    with col_cant_prop:
+        top_n_prop = st.selectbox(
+            "Mostrar estados (Prop.):",
             options=[10, 20, 30, 40, 50],
             index=0,
-            key='top_n_estados'
+            key='top_n_prop_estados'
         )
-    
-    st.plotly_chart(grafico_proporcion_gasto_estados(df_filtrado, ordenar_por, top_n), use_container_width=True)
+        
+    st.plotly_chart(grafico_proporcion_gasto_estados(df_filtrado, ordenar_por, top_n_prop), use_container_width=True)
     
     # Mapa de concentración de transacciones
     st.markdown("### 🗺️ Mapa de Concentración de Transacciones")
